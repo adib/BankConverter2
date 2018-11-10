@@ -1,7 +1,7 @@
 #!/usr/bin/python2.7
 # -*- coding: utf-8 -*-
 #
-# Converts DBS Bank's savings account CSV output into a proper CSV file for input to personal finance applications.
+# Converts OCBC Bank's savings account CSV output into a proper CSV file for input to personal finance applications.
 # 
 # This runs on macOS' built-in Python 2.7
 #
@@ -40,6 +40,7 @@ import csv
 import datetime
 import dateutil.parser
 
+
 OUTPUT_DATE_FORMAT = '%Y-%m-%d'
 
 
@@ -49,66 +50,47 @@ def reformat_date(date_str):
 
 
 def run_convert(input_file_name, output_file_name):
-    # DBS's CSV file format starts with 16 lines of blanks and header information containing the following:
-    #   - the account number
-    #   - account balances
-    #   - header information
-    #   - statement date
-    #
     with open(input_file_name, 'r') as input_file, open(output_file_name, 'w') as output_file:
         csv_input = csv.reader(input_file)
         csv_output = csv.writer(output_file)
 
         # Skip until the header row
-        for input_row in csv_input:
-            if len(input_row) > 0 and input_row[0] == 'Transaction Date':
+        for cur_input_row in csv_input:
+            if len(cur_input_row) > 0 and cur_input_row[0] == 'Transaction date':
                 break
 
-        # skip blank lines
-        for input_row in csv_input:
-            if len(input_row) > 0:
-                break
-
-        csv_output.writerow(['Transaction_Date', 'Widthdrawal', 'Deposit', 'Type', 'Ref1', 'Ref2', 'Ref3'])
+        csv_output.writerow(['Transaction_Date', 'Value_Date', 'Withdrawal', 'Deposit', 'Type', 'Ref1'])
 
         transaction_ref1_str = None
         transaction_ref2_str = None
-        transaction_ref3_str = None
+        prev_input_row = []
 
-        for input_row in csv_input:
-            if len(input_row) == 0:
-                continue
-            if len(input_row) >= 4:
-                transaction_date_str = input_row[0].strip()
-                transaction_ref_str = input_row[1].strip()
-                debit_amt_str = input_row[2].strip()
-                credit_amt_str = input_row[3].strip()
-            if len(input_row) >= 5:
-                transaction_ref1_str = input_row[4].strip()
-            if len(input_row) >= 6:
-                transaction_ref2_str = input_row[5].strip()
-            if len(input_row) >= 7:
-                transaction_ref3_str = input_row[6].strip()
-
-            date_str = reformat_date(transaction_date_str)
-            csv_output.writerow([
-                date_str,
-                debit_amt_str,
-                credit_amt_str,
-                transaction_ref_str,
-                transaction_ref1_str,
-                transaction_ref2_str,
-                transaction_ref3_str
-            ])
+        for cur_input_row in csv_input:
+            if len(cur_input_row) == 3 and len(prev_input_row) == 5:
+                transaction_date_str = prev_input_row[0].strip()
+                value_date_str = prev_input_row[0].strip()
+                debit_amt_str = prev_input_row[3].strip()
+                credit_amt_str = prev_input_row[4].strip()
+                transaction_ref1_str = prev_input_row[2].strip()
+                transaction_ref2_str = cur_input_row[2].strip()
+                csv_output.writerow([
+                    reformat_date(transaction_date_str),
+                    reformat_date(value_date_str),
+                    debit_amt_str,
+                    credit_amt_str,
+                    transaction_ref1_str,
+                    transaction_ref2_str                    
+                ])
+            prev_input_row = cur_input_row
 
 
 def print_help():
     script_name = os.path.basename(__file__)
-    text = ("\nReformat DBS Savings Account pseudo-CSV export into a proper CSV file.\n"
+    text = ("\nReformat OCBC-360 Savings Account pseudo-CSV export into a proper CSV file.\n"
         "Usage:\n"
         "\t {0} {{input-file}} {{output-file}}\n"
         "Where:\n"
-        "{{input-file}}\tThe file obtained from DBS' `Export to CSV` function (the `download` button on the balance history screen).\n"
+        "{{input-file}}\tThe file obtained from OCBC's `Export to CSV` function (the `download` button on the balance history screen).\n"
         "{{output-file}}\tWhere to write the properly-formatted CSV output file.\n"
     ).format(script_name)
     print text
