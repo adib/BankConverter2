@@ -45,7 +45,10 @@ OUTPUT_DATE_FORMAT = '%Y-%m-%d'
 
 
 def reformat_date(date_str):
-    date_obj = dateutil.parser.parse(date_str,fuzzy=True)
+    day_str = date_str[0:2]
+    month_str = date_str[3:5]
+    year_str = date_str[6:10]
+    date_obj = datetime.datetime(int(year_str), int(month_str), int(day_str))
     return date_obj.strftime(OUTPUT_DATE_FORMAT)
 
 
