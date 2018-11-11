@@ -68,7 +68,8 @@ def run_convert(input_file_name, output_file_name):
         transaction_ref2_str = None
         prev_input_row = []
 
-        for cur_input_row in csv_input:
+        for cur_input_row in csv_input:            
+            do_write_row = False
             if len(cur_input_row) == 3 and len(prev_input_row) == 5:
                 transaction_date_str = prev_input_row[0].strip()
                 value_date_str = prev_input_row[0].strip()
@@ -76,6 +77,16 @@ def run_convert(input_file_name, output_file_name):
                 credit_amt_str = prev_input_row[4].strip()
                 transaction_ref1_str = prev_input_row[2].strip()
                 transaction_ref2_str = cur_input_row[2].strip()
+                do_write_row = True
+            elif len(cur_input_row) == 5 and len(prev_input_row) == 5:
+                transaction_date_str = prev_input_row[0].strip()
+                value_date_str = prev_input_row[0].strip()
+                debit_amt_str = prev_input_row[3].strip()
+                credit_amt_str = prev_input_row[4].strip()
+                transaction_ref1_str = prev_input_row[2].strip()
+                transaction_ref2_str = None
+                do_write_row = True
+            if do_write_row:
                 csv_output.writerow([
                     reformat_date(transaction_date_str),
                     reformat_date(value_date_str),
