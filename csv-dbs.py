@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 #
 # Converts DBS Bank's savings account CSV output into a proper CSV file for input to personal finance applications.
