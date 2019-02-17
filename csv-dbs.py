@@ -63,7 +63,7 @@ def run_convert(input_file_name, output_file_name):
         for input_row in csv_input:
             if len(input_row) > 0 and input_row[0] == 'Transaction Date':
                 break
-        csv_output.writerow(['Transaction_Date', 'Widthdrawal', 'Deposit', 'Type', 'Ref1', 'Ref2', 'Ref3'])
+        csv_output.writerow(['Transaction_Date', 'Withdrawal', 'Deposit', 'Type', 'Ref1', 'Ref2', 'Ref3'])
 
         transaction_ref1_str = None
         transaction_ref2_str = None
