@@ -81,7 +81,7 @@ def run_convert(input_file_name, output_file_name):
                 amount_value = Decimal(amount_str)
 
                 if amount_value.is_signed():
-                    debit_amt_str = str(amount_value)
+                    debit_amt_str = str( -1 * amount_value)
                     credit_amt_str = ''
                 else:
                     debit_amt_str = ''
