@@ -68,36 +68,33 @@ def run_convert(input_file_name, output_file_name):
 
         prev_input_row = []
 
-        for cur_input_row in csv_input:            
-            do_write_row = False
-            if len(prev_input_row) == 15:
-                transaction_id_str = prev_input_row[0].strip()
-                transaction_date_str = prev_input_row[1].strip()
-                amount_str = prev_input_row[2].strip()
-                currency_str = prev_input_row[3].strip()
-                description_str = prev_input_row[4].strip()
-                merchant_str = prev_input_row[13].strip()
+        for cur_input_row in csv_input:
+            if len(cur_input_row) != 15:
+                continue
 
-                amount_value = Decimal(amount_str)
+            transaction_id_str = cur_input_row[0].strip()
+            transaction_date_str = cur_input_row[1].strip()
+            amount_str = cur_input_row[2].strip()
+            currency_str = cur_input_row[3].strip()
+            description_str = cur_input_row[4].strip()
+            merchant_str = cur_input_row[13].strip()
 
-                if amount_value.is_signed():
-                    debit_amt_str = str( -1 * amount_value)
-                    credit_amt_str = ''
-                else:
-                    debit_amt_str = ''
-                    credit_amt_str = str(amount_value)
-                do_write_row = True
+            amount_value = Decimal(amount_str)
 
+            if amount_value.is_signed():
+                debit_amt_str = str( -1 * amount_value)
+                credit_amt_str = ''
+            else:
+                debit_amt_str = ''
+                credit_amt_str = str(amount_value)
 
-            if do_write_row:
-                csv_output.writerow([
-                    reformat_date(transaction_date_str),
-                    debit_amt_str,
-                    credit_amt_str,
-                    merchant_str,
-                    description_str                    
-                ])
-            prev_input_row = cur_input_row
+            csv_output.writerow([
+                reformat_date(transaction_date_str),
+                debit_amt_str,
+                credit_amt_str,
+                merchant_str,
+                description_str
+            ])
 
 
 def print_help():
