@@ -13,6 +13,7 @@ Currently these banks and account types are supported:
  - [Oversea-Chinese Banking Corporation](http://en.wikipedia.org/wiki/Oversea-Chinese_Banking_Corporation) (OCBC) 360 (savings account).
  - [DBS Bank Ltd](http://en.wikipedia.org/wiki/DBS_Bank) Savings.
  - [Bank Central Asia](https://en.wikipedia.org/wiki/Bank_Central_Asia) (BCA) Transaction history CSV.
+ - [TransferWise](https://transferwise.com/invite/i/abrahama44) Transaction CSV dump.
 
 ## Prerequisites
 
