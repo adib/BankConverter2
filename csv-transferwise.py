@@ -1,12 +1,10 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Reformats Transferwise's CSV file into a format usable by personal finance software.
-# 
-# This runs on macOS' built-in Python 2.7 without needing any extra packages.
+# Reformats Wise's CSV file into a format usable by personal finance software.
 #
-# Copyright (c) 2020, Sasmito Adibowo
-# https://cutecoder.org
+# Copyright (c) 2020-2021, Sasmito Adibowo
+# https://indiespark.top
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -38,7 +36,6 @@ import sys
 import os.path
 import csv
 import datetime
-import dateutil.parser
 
 from decimal import Decimal
 
@@ -56,28 +53,23 @@ def reformat_date(date_str):
 
 def run_convert(input_file_name, output_file_name):
     with open(input_file_name, 'r') as input_file, open(output_file_name, 'w') as output_file:
-        csv_input = csv.reader(input_file)
+        csv_input = csv.DictReader(input_file)
         csv_output = csv.writer(output_file)
-
-        # Skip until the header row
-        for cur_input_row in csv_input:
-            if len(cur_input_row) > 0 and cur_input_row[0] == 'TransferWise ID':
-                break
 
         csv_output.writerow(['Transaction_Date', 'Withdrawal', 'Deposit', 'Merchant', 'Description'])
 
         prev_input_row = []
 
         for cur_input_row in csv_input:
-            if len(cur_input_row) != 15:
+            if len(cur_input_row) != 19:
                 continue
 
-            transaction_id_str = cur_input_row[0].strip()
-            transaction_date_str = cur_input_row[1].strip()
-            amount_str = cur_input_row[2].strip()
-            currency_str = cur_input_row[3].strip()
-            description_str = cur_input_row[4].strip()
-            merchant_str = cur_input_row[13].strip()
+            transaction_id_str = cur_input_row['TransferWise ID'].strip()
+            transaction_date_str = cur_input_row['Date'].strip()
+            amount_str = cur_input_row['Amount'].strip()
+            currency_str = cur_input_row['Currency'].strip()
+            description_str = cur_input_row['Description'].strip()
+            merchant_str = cur_input_row['Merchant'].strip()
 
             amount_value = Decimal(amount_str)
 
@@ -106,7 +98,7 @@ def print_help():
         "{{input-file}}\tThe file obtained from TransferWise Debit Cards CSV Statement function (in the iOS App, choose the debit card, then Statements).\n"
         "{{output-file}}\tWhere to write the properly-formatted CSV output file.\n"
     ).format(script_name)
-    print text
+    print(text)
 
 
 if __name__ == '__main__':
@@ -116,11 +108,11 @@ if __name__ == '__main__':
     input_file = sys.argv[1]
     output_file = sys.argv[2]
     if not os.path.isfile(input_file):
-        print "Input file does not exists:", input_file
+        print(f"Input file does not exists: {input_file}") 
         print_help()
         exit(3)
     if os.path.isfile(output_file):
-        print "Output file already exists:", output_file
+        print(f"Output file already exists: {output_file}")
         print_help()
         exit(3)
     run_convert(input_file, output_file)
