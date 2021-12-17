@@ -13,6 +13,7 @@ Currently these banks and account types are supported:
  - [Oversea-Chinese Banking Corporation](http://en.wikipedia.org/wiki/Oversea-Chinese_Banking_Corporation) (OCBC) 360 (savings account).
  - [DBS Bank Ltd](http://en.wikipedia.org/wiki/DBS_Bank) Savings.
  - [Bank Central Asia](https://en.wikipedia.org/wiki/Bank_Central_Asia) (BCA) Transaction history CSV.
+ - [TransferWise](https://transferwise.com/invite/i/abrahama44) Transaction CSV dump.
 
 ## Prerequisites
 
@@ -25,7 +26,7 @@ These installation steps should work on Unix or Unix-like systems (e.g. macOS, L
 1. Download the repository
 2. Mark the scripts as executable:
 
-        $ chmod a+x csv-bca.py csv-ocbc.py csv-dbs.py
+        $ chmod a+x csv-bca.py csv-ocbc.py csv-dbs.py csv-transferwise.py
 
 3. Create a symbolic link from `/usr/local/bin` to the script's installation directory:
 
@@ -33,12 +34,13 @@ These installation steps should work on Unix or Unix-like systems (e.g. macOS, L
         $ ln -s {path-to-download}/csv-dbs.py csv-dbs  
         $ ln -s {path-to-download}/csv-ocbc.py csv-ocbc
         $ ln -s {path-to-download}/csv-bca.py csv-bca
+        $ ln -s {path-to-download}/csv-transferwise.py csv-transferwise
 
 If you are a Windows user, please adapt those steps to your system as necessary.
 
 ## Usage
   1. Open your bank's Internet Banking website and download your transaction history into a CSV file.
-  2. Run the conversion script against it, either `csv-dbs`, `csv-ocbc`, or `csv-bca`
+  2. Run the conversion script against it, either `csv-dbs`, `csv-ocbc`, `csv-bca` or `csv-transferwise`
       - The first argument is your bank's CSV file as input.
       - The second argument is where to write the processed CSV output.
   3. Import the resulting CSV output into your favorite personal finance software.
