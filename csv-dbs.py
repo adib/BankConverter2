@@ -1,12 +1,12 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.9
 # -*- coding: utf-8 -*-
 #
 # Converts DBS Bank's savings account CSV output into a proper CSV file for input to personal finance applications.
 # 
-# This runs on macOS' built-in Python 2.7
+# This runs on Python 3.9
 #
-# Copyright (c) 2018, Sasmito Adibowo
-# https://cutecoder.org
+# Copyright (c) 2018-2022, Sasmito Adibowo
+# https://indiespark.top
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
@@ -38,13 +38,14 @@ import sys
 import os.path
 import csv
 import datetime
-import dateutil.parser
 
 OUTPUT_DATE_FORMAT = '%Y-%m-%d'
 
+INPUT_DATE_FORMAT = '%d %b %Y'
+
 
 def reformat_date(date_str):
-    date_obj = dateutil.parser.parse(date_str,fuzzy=True)
+    date_obj = datetime.datetime.strptime(date_str, INPUT_DATE_FORMAT)
     return date_obj.strftime(OUTPUT_DATE_FORMAT)
 
 
@@ -105,7 +106,7 @@ def print_help():
         "{{input-file}}\tThe file obtained from DBS' `Export to CSV` function (the `download` button on the balance history screen).\n"
         "{{output-file}}\tWhere to write the properly-formatted CSV output file.\n"
     ).format(script_name)
-    print text
+    print(text)
 
 
 if __name__ == '__main__':
@@ -115,11 +116,11 @@ if __name__ == '__main__':
     input_file = sys.argv[1]
     output_file = sys.argv[2]
     if not os.path.isfile(input_file):
-        print "Input file does not exists:", input_file
+        print(f"Input file does not exists: {input_file}") 
         print_help()
         exit(3)
     if os.path.isfile(output_file):
-        print "Output file already exists:", output_file
+        print(f"Output file already exists: {output_file}") 
         print_help()
         exit(3)
     run_convert(input_file, output_file)
