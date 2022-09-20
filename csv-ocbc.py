@@ -38,9 +38,21 @@ import sys
 import os.path
 import csv
 import datetime
+import re
+
+from functools import lru_cache
 
 
 OUTPUT_DATE_FORMAT = '%Y-%m-%d'
+
+@lru_cache(maxsize=1)
+def regex_extract_column():
+    return re.compile('\'?(.*)')
+
+
+def clean_cell(val: str) -> str:
+    return regex_extract_column().match(val).groups()[0].strip()
+
 
 
 def reformat_date(date_str):
@@ -58,7 +70,7 @@ def run_convert(input_file_name, output_file_name):
 
         # Skip until the header row
         for cur_input_row in csv_input:
-            if len(cur_input_row) > 0 and cur_input_row[0] == 'Transaction date':
+            if len(cur_input_row) > 0 and clean_cell(cur_input_row[0]) == 'Transaction date':
                 break
 
         csv_output.writerow(['Transaction_Date', 'Value_Date', 'Withdrawal', 'Deposit', 'Type', 'Ref1'])
@@ -70,13 +82,13 @@ def run_convert(input_file_name, output_file_name):
         for cur_input_row in csv_input:            
             do_write_row = False
             if len(prev_input_row) == 5:
-                transaction_date_str = prev_input_row[0].strip()
-                value_date_str = prev_input_row[0].strip()
-                debit_amt_str = prev_input_row[3].strip()
-                credit_amt_str = prev_input_row[4].strip()
-                transaction_ref1_str = prev_input_row[2].strip()
+                transaction_date_str = clean_cell(prev_input_row[0])
+                value_date_str = clean_cell(prev_input_row[0])
+                debit_amt_str = clean_cell(prev_input_row[3])
+                credit_amt_str = clean_cell(prev_input_row[4])
+                transaction_ref1_str = clean_cell(prev_input_row[2])
                 if len(cur_input_row) == 3:
-                    transaction_ref2_str = cur_input_row[2].strip()
+                    transaction_ref2_str = clean_cell(cur_input_row[2])
                     do_write_row = True
                 elif len(cur_input_row) == 5:
                     transaction_ref2_str = None
