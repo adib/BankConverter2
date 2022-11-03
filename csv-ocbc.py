@@ -73,7 +73,8 @@ def run_convert(input_file_name, output_file_name):
             if len(cur_input_row) > 0 and clean_cell(cur_input_row[0]) == 'Transaction date':
                 break
 
-        csv_output.writerow(['Transaction_Date', 'Value_Date', 'Withdrawal', 'Deposit', 'Type', 'Ref1'])
+        # Use `Value_Date` for reconciliation purposes.
+        csv_output.writerow(['Value_Date', 'Transaction_Date', 'Withdrawal', 'Deposit', 'Type', 'Ref1'])
 
         transaction_ref1_str = None
         transaction_ref2_str = None
@@ -95,8 +96,8 @@ def run_convert(input_file_name, output_file_name):
                     do_write_row = True
             if do_write_row:
                 csv_output.writerow([
-                    reformat_date(transaction_date_str),
                     reformat_date(value_date_str),
+                    reformat_date(transaction_date_str),                    
                     debit_amt_str,
                     credit_amt_str,
                     transaction_ref1_str,
