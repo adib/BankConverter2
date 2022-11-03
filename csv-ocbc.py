@@ -83,7 +83,7 @@ def run_convert(input_file_name, output_file_name):
             do_write_row = False
             if len(prev_input_row) == 5:
                 transaction_date_str = clean_cell(prev_input_row[0])
-                value_date_str = clean_cell(prev_input_row[0])
+                value_date_str = clean_cell(prev_input_row[1])
                 debit_amt_str = clean_cell(prev_input_row[3])
                 credit_amt_str = clean_cell(prev_input_row[4])
                 transaction_ref1_str = clean_cell(prev_input_row[2])
