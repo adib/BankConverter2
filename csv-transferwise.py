@@ -61,7 +61,7 @@ def run_convert(input_file_name, output_file_name):
         prev_input_row = []
 
         for cur_input_row in csv_input:
-            if len(cur_input_row) != 19:
+            if len(cur_input_row) != 20:
                 continue
 
             transaction_id_str = cur_input_row['TransferWise ID'].strip()
