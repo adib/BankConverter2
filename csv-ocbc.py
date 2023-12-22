@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.9
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Converts OCBC Bank's savings account CSV output into a proper CSV file for input to personal finance applications.
