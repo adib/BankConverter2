@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 -I
 # -*- coding: utf-8 -*-
 #
 # Converts DBS Bank's savings account CSV output into a proper CSV file for input to personal finance applications.
@@ -66,6 +66,7 @@ def run_convert(input_file_name, output_file_name):
                 break
         csv_output.writerow(['Transaction_Date', 'Withdrawal', 'Deposit', 'Type', 'Ref1', 'Ref2', 'Ref3'])
 
+        transaction_type_str = None
         transaction_ref1_str = None
         transaction_ref2_str = None
         transaction_ref3_str = None
@@ -73,24 +74,21 @@ def run_convert(input_file_name, output_file_name):
         for input_row in csv_input:
             if len(input_row) == 0:
                 continue
-            if len(input_row) >= 4:
+            if len(input_row) >= 8:
                 transaction_date_str = input_row[0].strip()
-                transaction_ref_str = input_row[1].strip()
-                debit_amt_str = input_row[2].strip()
-                credit_amt_str = input_row[3].strip()
-            if len(input_row) >= 5:
-                transaction_ref1_str = input_row[4].strip()
-            if len(input_row) >= 6:
-                transaction_ref2_str = input_row[5].strip()
-            if len(input_row) >= 7:
-                transaction_ref3_str = input_row[6].strip()
+                transaction_type_str = input_row[1].strip()
+                transaction_ref1_str = input_row[3].strip()
+                transaction_ref2_str = input_row[4].strip()
+                transaction_ref3_str = input_row[5].strip()
+                debit_amt_str = input_row[7].strip()
+                credit_amt_str = input_row[8].strip()
 
             date_str = reformat_date(transaction_date_str)
             csv_output.writerow([
                 date_str,
                 debit_amt_str,
                 credit_amt_str,
-                transaction_ref_str,
+                transaction_type_str,
                 transaction_ref1_str,
                 transaction_ref2_str,
                 transaction_ref3_str
@@ -109,20 +107,23 @@ def print_help():
     print(text)
 
 
-if __name__ == '__main__':
+def main():
     if len(sys.argv) != 3:
         print_help()
-        exit(2)
+        return 2
     input_file = sys.argv[1]
     output_file = sys.argv[2]
     if not os.path.isfile(input_file):
         print(f"Input file does not exists: {input_file}") 
         print_help()
-        exit(3)
+        return 3
     if os.path.isfile(output_file):
         print(f"Output file already exists: {output_file}") 
         print_help()
-        exit(3)
+        return 3
     run_convert(input_file, output_file)
-    exit(0)
+    return 0
 
+
+if __name__ == '__main__':
+    exit(main())
